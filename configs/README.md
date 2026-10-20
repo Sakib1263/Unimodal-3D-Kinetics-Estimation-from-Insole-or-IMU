@@ -4,9 +4,9 @@ Each JSON file defines one target, foot, model, and input configuration. Unknown
 
 | Configuration | Article route | Default input and target |
 | --- | --- | --- |
-| [km2kn.json](km2kn.json) | Km2Kn, under journal revision | Six bilateral ankle-region kinematic trajectories â†’ left-foot `Fy`. |
-| [insole_grfm.json](insole_grfm.json) | Published smart insole study | Left-foot pressure channels `p1`â€“`p16` â†’ left-foot `Fy`. |
-| [insole_cop.json](insole_cop.json) | Published smart insole study | Right-foot pressure channels `p1`â€“`p16` â†’ right-foot treadmill `CoPz`. |
+| [km2kn.json](km2kn.json) | Km2Kn, under journal revision | Six bilateral ankle-region kinematic trajectories -> left-foot `Fy`. |
+| [insole_grfm.json](insole_grfm.json) | Published smart insole study | Left-foot pressure channels `p1`-`p16` -> left-foot `Fy`. |
+| [insole_cop.json](insole_cop.json) | Published smart insole study | Right-foot pressure channels `p1`-`p16` -> right-foot treadmill `CoPz`. |
 | [source_native_example.json](source_native_example.json) | Corrected preparation example | New MATLAB exports with training-fitted reversible normalization. Source units still require verification. |
 
 These are maintained-workflow examples, not frozen reproductions of the articles. Read [PAPERS.md](../docs/PAPERS.md) for protocol differences and notebook links.
@@ -18,7 +18,7 @@ These are maintained-workflow examples, not frozen reproductions of the articles
 - **Model:** `model`, `depth`, `width`, `kernel_size`, `cardinality`, `pooling`, and `deep_supervision`. The stored class/method name is the implementation identity; it does not certify correspondence to a paper's named network.
 - **Windows:** `window_length`, `sample_rate`, and `train_stride`. Overlap is extracted within individual source records only. Records already equal to `window_length` generate one window regardless of a smaller stride.
 - **Selection:** `min_abs_pcc` and `max_pairwise_correlation` are fitted on training records only. Set 0 and 1 respectively to disable target-correlation and redundancy pruning. Constant input channels are removed using the training data. Pairwise pruning is not labeled as multivariate VIF.
-- **Evaluation:** `fold_ids` selects distinct outer folds 1â€“5. `validation_subjects` defaults to one separate participant from each training pool. `seed` controls repeatable software randomness; cross-device numerical identity is not promised.
+- **Evaluation:** `fold_ids` selects distinct outer folds 1-5. `validation_subjects` defaults to one separate participant from each training pool. `seed` controls repeatable software randomness; cross-device numerical identity is not promised.
 - **Training:** `epochs`, `batch_size`, `learning_rate`, `loss`, `patience`, and `lr_patience`. Supported losses are MAE, Huber, and MSE. Deep supervision uses weight 1 for `out` and 0.5 for each auxiliary head.
 - **Artifacts:** `output_dir` controls where new, uniquely named run directories are created; `project_dir` optionally sets the base for data and outputs.
 

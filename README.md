@@ -2,14 +2,14 @@
 
 Actively maintained research code for estimating per-foot plantar kinetics from **processed inertial kinematics** or **distributed plantar vGRF from smart insoles**. The two sensing routes share a training and evaluation workflow, while retaining their own inputs, configurations and article attribution.
 
-[Articles and citations](docs/PAPERS.md) Â· [Data preparation](docs/DATA_CONTRACT.md) Â· [Configuration guide](configs/README.md) Â· [Model guide](models/README.md)
+[Articles and citations](docs/PAPERS.md) | [Data preparation](docs/DATA_CONTRACT.md) | [Configuration guide](configs/README.md) | [Model guide](models/README.md)
 
 ## Articles and notebooks
 
 | Study | Article | Start with |
 | --- | --- | --- |
-| **Km2Kn** | *Deep learning-based reconstruction of a complete 3D plantar kinetic profile from optimized inertial kinematics*. **Manuscript under journal revision**, author-confirmed October 2026; a final citation/DOI will be added when available. | [Km2Kn.ipynb](Km2Kn.ipynb) â€” processed kinematic trajectories to forces, moments or CoP. |
-| **Insole2Kn3D** | Sakib Mahmud, Muhammad E. H. Chowdhury, and Faycal Bensaali. *3D Foot Kinetics Estimation From Distributed VGRF From Smart Insoles via 1D Domain Transformation*. **IEEE Journal of Biomedical and Health Informatics**, 30(3), 2656â€“2667, March 2026. [DOI: 10.1109/JBHI.2025.3605296](https://doi.org/10.1109/JBHI.2025.3605296). | [Insole2Kn3D_GRFM.ipynb](Insole2Kn3D_GRFM.ipynb) â€” forces/moments; [Insole2Kn3D_CoP.ipynb](Insole2Kn3D_CoP.ipynb) â€” center of pressure. |
+| **Km2Kn** | *Deep learning-based reconstruction of a complete 3D plantar kinetic profile from optimized inertial kinematics*. **Manuscript under journal revision**, as of October 2026; a final citation/DOI will be added when available. | [Km2Kn.ipynb](Km2Kn.ipynb) - processed kinematic trajectories to forces, moments or CoP. |
+| **Insole2Kn3D** | Sakib Mahmud, Muhammad E. H. Chowdhury, and Faycal Bensaali. *3D Foot Kinetics Estimation From Distributed VGRF From Smart Insoles via 1D Domain Transformation*. **IEEE Journal of Biomedical and Health Informatics**, 30(3), 2656-2667, March 2026. [DOI: 10.1109/JBHI.2025.3605296](https://doi.org/10.1109/JBHI.2025.3605296). | [Insole2Kn3D_GRFM.ipynb](Insole2Kn3D_GRFM.ipynb) - forces/moments; [Insole2Kn3D_CoP.ipynb](Insole2Kn3D_CoP.ipynb) - center of pressure. |
 
 The published article first appeared online on September 5, 2025. Its original repository address, [Insole-to-3DGRFMCoP](https://github.com/Sakib1263/Insole-to-3DGRFMCoP), resolves to this repository. Both articles are described in the [paper correspondence and citation guide](docs/PAPERS.md).
 
@@ -71,7 +71,7 @@ Open the notebook for your study and select the project environment as its kerne
 
 Research data and pretrained article checkpoints are **not bundled**. Review the [data contract](docs/DATA_CONTRACT.md) before loading a dataset.
 
-- **Historical MATLAB exports:** place `Data_Preprocessed_Walk.mat` and `Data_Preprocessed_Run.mat` under `data/`. They need participant and speed labels. Their stored minâ€“max scale cannot be converted to physical units without the missing source scale parameters.
+- **Historical MATLAB exports:** place `Data_Preprocessed_Walk.mat` and `Data_Preprocessed_Run.mat` under `data/`. They need participant and speed labels. Their stored min-max scale cannot be converted to physical units without the missing source scale parameters.
 - **New source-native exports:** run [Data_Preprocessing.m](Data_Preprocessing.m) on already synchronized `Datastr` source records. It preserves source units and writes `_v2.mat` exports without additional window normalization. Start from [source_native_example.json](configs/source_native_example.json), verifying the units and labels first.
 - **NPZ exports:** use the array and metadata schema in the [data contract](docs/DATA_CONTRACT.md). Target, foot, study, sample rate, scale and reference metadata must match the configuration.
 
@@ -79,9 +79,9 @@ Choose a configuration:
 
 | Configuration | Default task |
 | --- | --- |
-| [configs/km2kn.json](configs/km2kn.json) | Bilateral ankle-region kinematics â†’ left-foot `Fy`. |
-| [configs/insole_grfm.json](configs/insole_grfm.json) | Left-foot pressure channels â†’ left-foot `Fy`. |
-| [configs/insole_cop.json](configs/insole_cop.json) | Right-foot pressure channels â†’ right-foot treadmill `CoPz`. |
+| [configs/km2kn.json](configs/km2kn.json) | Bilateral ankle-region kinematics -> left-foot `Fy`. |
+| [configs/insole_grfm.json](configs/insole_grfm.json) | Left-foot pressure channels -> left-foot `Fy`. |
+| [configs/insole_cop.json](configs/insole_cop.json) | Right-foot pressure channels -> right-foot treadmill `CoPz`. |
 
 Copy the relevant JSON to a descriptive filename and adjust the target, foot, data paths and scale settings. Files under `configs/` resolve paths against the repository root. A JSON elsewhere resolves paths against its own folder; `project_dir` can explicitly set the base directory. Absolute paths are also accepted. The same base applies to `output_dir`.
 
@@ -129,7 +129,7 @@ Each unique run directory contains:
 | `fold_XX/predictions.npz` | Signed predictions, references, participant/speed/mode/record labels and task metadata. |
 | `metrics_by_window.csv`, `metrics_by_participant.csv`, `summary.json` | Window-level scores and participant-balanced summaries. |
 
-MAE and RMSE use predictions in the source scale after reversing the saved training target transform. Test reference values stay in their original scale without a normalization round trip. **NRMSE divides RMSE by the source-scale training target range**, even when normalization is disabled. A zero range produces null NRMSE. Undefined correlations or RÂ² also remain null, with valid counts reported. Correlations are fractions. The summary averages windows within participant, then weights participants equally. It does not implement the articles' full gait-cycle evaluation.
+MAE and RMSE use predictions in the source scale after reversing the saved training target transform. Test reference values stay in their original scale without a normalization round trip. **NRMSE divides RMSE by the source-scale training target range**, even when normalization is disabled. A zero range produces null NRMSE. Undefined correlations or R-squared also remain null, with valid counts reported. Correlations are fractions. The summary averages windows within participant, then weights participants equally. It does not implement the articles' full gait-cycle evaluation.
 
 Plot a saved prediction, replacing `<run>` with an actual directory name:
 
@@ -166,7 +166,7 @@ outputs/                     Preserved historical research exports
 scripts/                     Lightweight repository validation
 ```
 
-Historical CSV and spreadsheet results in [outputs/](outputs/README.md) are preserved research records; they were not regenerated by the maintained code. Unused exploratory code, duplicate notebook versions and local validation artifacts have been removed from the maintained tree. Datasets, generated runs, checkpoints and environments are ignored by Git.
+Historical CSV and spreadsheet results in [outputs/](outputs/README.md) are preserved research records. Verify their generating experiment before comparing them with a new run. Datasets, generated runs, checkpoints and environments are ignored by Git.
 
 For maintenance checks, install `python -m pip install -e ".[maintain]"`, then run `python -m ruff check .` and `python scripts/validate_repository.py`. GitHub Actions runs these static checks on published changes. The synthetic demo and notebook reload checks provide runnable integration checks; a separate research-data evaluation is required before scientific claims. See [CONTRIBUTING.md](CONTRIBUTING.md) for change-reporting guidance.
 

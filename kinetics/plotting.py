@@ -34,7 +34,7 @@ def plot_predictions(path, output=None, sample=0):
         side = str(data["side"].item()) if "side" in data else ""
         title = f"{side} {target} | participant {data['subject'][sample]} | window {sample} | {source}"
         if source == "synthetic_only":
-            title = "SYNTHETIC DEMO — " + title
+            title = "SYNTHETIC DEMO - " + title
         times = np.arange(truth.shape[1]) / sample_rate
         figure, axes = plt.subplots(figsize=(10, 3.5), constrained_layout=True)
         axes.plot(times, truth[sample, :, 0], label="Reference", color="#1f4e79")

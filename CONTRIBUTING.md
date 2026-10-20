@@ -4,6 +4,8 @@ This repository is maintained for the Km2Kn and Insole2Kn3D studies. Read the [a
 
 ## Verify a change
 
+Save source and documentation as UTF-8 with LF line endings, as specified in `.editorconfig`. Use plain punctuation in the English documentation and keep notebook source free of copied rendering artifacts. The repository validator checks for common encoding errors.
+
 Use a separate Python 3.12 environment. Install `python -m pip install -e ".[maintain]"`, then run:
 
 ```bash

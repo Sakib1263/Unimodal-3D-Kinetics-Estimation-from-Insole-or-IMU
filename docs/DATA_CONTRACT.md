@@ -1,12 +1,12 @@
 # Data contract and preprocessing
 
-The repository contains code and historical result exports. The source study dataset is not bundled. Training must use the synchronized, matched participantâ€“trial data associated with the article of interest. The supported participants are P04â€“P12; source axes are x = anteroposterior, y = vertical, z = mediolateral. Confirm these conventions against the source files before interpreting any axis.
+The repository contains code and historical result exports. The source study dataset is not bundled. Training must use the synchronized, matched participant-trial data associated with the article of interest. The supported participants are P04-P12; source axes are x = anteroposterior, y = vertical, z = mediolateral. Confirm these conventions against the source files before interpreting any axis.
 
 ## Array and label requirements
 
 The Python workflow uses `X: (record, time, channel)` and `Y: (record, time, 1)`. Every row must represent one contiguous, synchronized record or an already extracted contiguous window. Rows must never join participants, trials, or separated contacts. Inputs and targets share the same temporal samples. Nonfinite values are rejected rather than replaced with zeros. Complex, text and boolean signal arrays are rejected before conversion. Source target precision is retained; model inputs and normalized optimization targets use float32.
 
-`subject`, `speed`, `mode`, and `record` contain one label per row. Participant IDs are integers 4â€“12. Speed is stored in the source convention; the provided MATLAB exporter parses source filenames in tenths of km/h. Mode is 0 for walking and 1 for running. Record identifiers should retain the source trial and interval.
+`subject`, `speed`, `mode`, and `record` contain one label per row. Participant IDs are integers 4-12. Speed is stored in the source convention; the provided MATLAB exporter parses source filenames in tenths of km/h. Mode is 0 for walking and 1 for running. Record identifiers should retain the source trial and interval.
 
 Supported targets are `Fx`, `Fy`, `Fz`, `Mx`, `My`, `Mz`, `CoPx`, and `CoPz`. A separate model is trained for each target and foot. `LL` and `RL` denote left and right foot. Vertical CoP and center of mass are not substituted for these eight targets.
 
@@ -31,7 +31,7 @@ The historical MATLAB script omitted `speedinfo` from its save call. A file with
 
 ## Scale and units
 
-The original preprocessing applied minâ€“max normalization without saving an invertible scale for each target. Such files must use:
+The original preprocessing applied min-max normalization without saving an invertible scale for each target. Such files must use:
 
 ```json
 {
@@ -41,7 +41,7 @@ The original preprocessing applied minâ€“max normalization without saving a
 }
 ```
 
-Multiplication by participant body mass does not invert minâ€“max scaling. The maintained evaluation reports legacy errors only in their stored scale; it does not label them N, NÂ·m, or cm.
+Multiplication by participant body mass does not invert min-max scaling. The maintained evaluation reports legacy errors only in their stored scale; it does not label them N, N*m, or cm.
 
 For exports that retain the source scale, select `dataset_state: source_native` and `normalization: train_minmax`. The training transform is fitted per channel across training records only. Validation inputs/targets and test inputs use training transforms without clipping. Test references stay in their original source scale. Predictions are restored with the saved training minimum and range. MAE and RMSE then use the supplied source scale, and NRMSE divides by the source-scale training target range. The same NRMSE definition applies when normalization is disabled and to legacy stored scales. A constant training reference produces null NRMSE rather than an arbitrary denominator. Verify `target_units` against the source; the example intentionally uses `source_native_unverified` until that review is complete.
 
@@ -95,7 +95,7 @@ Only use `target_units="N"` after verifying that the source force is in newtons.
 This optional path visualizes source signals; it does not prepare training datasets. Files must be named `<participant>_<trial>.csv`, for example `Subj04_walk_09.csv`. Each row is one time sample. Column order is exact:
 
 - **Force (12 columns):** `RFx, RFy, RFz, RMx, RMy, RMz, LFx, LFy, LFz, LMx, LMy, LMz`.
-- **Insole (50 columns):** left block followed by right block. Each block contains pressure `LP0`â€“`LP15` (or `RP0`â€“`RP15`), then `LAX, LAY, LAZ, LGX, LGY, LGZ, LTF, LCX, LCY` (corresponding `R` names for the right block). These CSV names follow the original source schema; the MATLAB/NPZ model inputs use `p1`â€“`p16`.
+- **Insole (50 columns):** left block followed by right block. Each block contains pressure `LP0`-`LP15` (or `RP0`-`RP15`), then `LAX, LAY, LAZ, LGX, LGY, LGZ, LTF, LCX, LCY` (corresponding `R` names for the right block). These CSV names follow the original source schema; the MATLAB/NPZ model inputs use `p1`-`p16`.
 
 Headerless files use that exact positional schema. With `--header`, names/order are checked before loading; columns are never silently relabeled. Select the contact reference from the same foot as the plotted signal, and verify its threshold and source units:
 

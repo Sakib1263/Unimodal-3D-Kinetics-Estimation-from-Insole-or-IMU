@@ -6,7 +6,7 @@ This repository supports two related unimodal studies. Their sensing modalities,
 
 **Title:** Deep learning-based reconstruction of a complete 3D plantar kinetic profile from optimized inertial kinematics.
 
-**Status:** Under journal revision, as confirmed by the authors on October 20, 2026. The supplied V6 anonymized manuscript is the technical reference for this maintenance review. No journal name, DOI, acceptance date, or final author list is inferred from the anonymized document.
+**Status:** Manuscript under journal revision as of October 2026. The final publication details and DOI will be added when available.
 
 **Method:** Km2Kn maps processed joint- and segment-kinematic trajectories derived from Xsens inertial motion capture to eight available kinetic waveforms per foot. The manuscript calls the reconstruction backbone Km2KnNet. It compares anatomical regions, target-specific channels, laterality, architecture benchmarks, and component ablations.
 
@@ -14,7 +14,7 @@ This repository supports two related unimodal studies. Their sensing modalities,
 
 **Configuration:** [km2kn.json](../configs/km2kn.json). Its six selected channels are the bilateral ankle angle, ankle adduction, and subtalar angle trajectories. These are processed kinematic channels, not an assertion that an independently configured sparse IMU system produces equivalent trajectories.
 
-The manuscript describes record-level min–max normalization before resampling/windowing, 1,024 samples at 256 Hz, 80% training overlap, five outer participant folds, a 10% random validation sample from training data before augmentation, and separate target-specific models. It also describes gait-cycle evaluation and a training-reference mapping for dimensional predictions. The historical local notebook does not establish all these operations, and its existing normalized MAT files do not retain enough scale metadata to recreate every dimensional result.
+The manuscript describes record-level min-max normalization before resampling/windowing, 1,024 samples at 256 Hz, 80% training overlap, five outer participant folds, a 10% random validation sample from training data before augmentation, and separate target-specific models. It also describes gait-cycle evaluation and a training-reference mapping for dimensional predictions. The historical local notebook does not establish all these operations, and its existing normalized MAT files do not retain enough scale metadata to recreate every dimensional result.
 
 ## Insole2Kn3D: published smart insole article
 
@@ -22,9 +22,9 @@ The manuscript describes record-level min–max normalization before resampling/
 
 **Authors:** Sakib Mahmud, Muhammad E. H. Chowdhury, and Faycal Bensaali.
 
-**Publication:** IEEE Journal of Biomedical and Health Informatics, volume 30, issue 3, pages 2656–2667, March 2026. First published online September 5, 2025.
+**Publication:** IEEE Journal of Biomedical and Health Informatics, volume 30, issue 3, pages 2656-2667, March 2026. First published online September 5, 2025.
 
-**DOI:** [10.1109/JBHI.2025.3605296](https://doi.org/10.1109/JBHI.2025.3605296). Bibliographic fields were checked against the supplied published PDF and [publisher-deposited Crossref metadata](https://api.crossref.org/works/10.1109/JBHI.2025.3605296).
+**DOI:** [10.1109/JBHI.2025.3605296](https://doi.org/10.1109/JBHI.2025.3605296).
 
 **Method:** Distributed plantar vGRF from smart insoles is mapped to instrumented-treadmill-reference 3D GRF, 3D GRM, and two horizontal CoP trajectories using target-specific 1D reconstruction models. The paper introduces Ke2KeNet and evaluates plantar-region relevance.
 
@@ -32,7 +32,7 @@ The manuscript describes record-level min–max normalization before resampling/
 
 **Configurations:** [insole_grfm.json](../configs/insole_grfm.json) and [insole_cop.json](../configs/insole_cop.json).
 
-The article describes 1,024-sample windows at 256 Hz, segment min–max normalization, five outer participant folds, a random 10% validation subset of the training set, MAE validation loss, an initial learning rate of 3e-4, 20-epoch early-stopping patience, and a 10-epoch learning-rate patience. Historical code paths do not by themselves certify the reported dimensional errors or exact network implementation.
+The article describes 1,024-sample windows at 256 Hz, segment min-max normalization, five outer participant folds, a random 10% validation subset of the training set, MAE validation loss, an initial learning rate of 3e-4, 20-epoch early-stopping patience, and a 10-epoch learning-rate patience. Historical code paths do not by themselves certify the reported dimensional errors or exact network implementation.
 
 The article's original repository URL, [Insole-to-3DGRFMCoP](https://github.com/Sakib1263/Insole-to-3DGRFMCoP), resolves to this repository under its current name.
 
@@ -42,12 +42,12 @@ The article's original repository URL, [Insole-to-3DGRFMCoP](https://github.com/
 | --- | --- | --- |
 | Outer test folds | P11/P12, P09/P10, P07/P08, P05/P06, P04 | Preserves the documented participant schedule. |
 | Validation | One held-out participant from each outer training pool by default | Stricter than the articles' random 10% training-sample holdout; not numerically interchangeable. |
-| Preprocessing | Explicit source-scale contract; optional training-fitted min–max transform | Corrected protocol. Record/window normalization in each article must be reproduced separately when required. |
+| Preprocessing | Explicit source-scale contract; optional training-fitted min-max transform | Corrected protocol. Record/window normalization in each article must be reproduced separately when required. |
 | Overlap | Only within individual supplied records, after participant splitting | Pre-windowed exports cannot recover missing continuous samples for 80% overlap. |
 | CoP reference | Instrumented treadmill by default; missing CoP causes an error | Fixes historical notebooks that selected insole CoP while labeling the reference as force plate. |
 | Network identity | Explicit implemented class/method, e.g. `MLMRSNet.IMUNet` | Not automatically equated with Km2KnNet or Ke2KeNet. A component/equation/checkpoint audit remains necessary. |
 | PSPNet | Newly maintained 1D pyramid-pooling baseline | Replaces calls to a nonexistent `.PSPNet()` method; not a claim to recover an original trained benchmark. |
-| Dimensional errors | Inverse of a saved training transform, otherwise stored source scale | Body mass alone cannot recover discarded min–max parameters. |
+| Dimensional errors | Inverse of a saved training transform, otherwise stored source scale | Body mass alone cannot recover discarded min-max parameters. |
 | Evaluation | Signed, sample-aligned window metrics with participant-balanced summaries | Full gait-cycle segmentation, grouping, and manuscript result verification remain separate. |
 | Existing spreadsheets and CSVs | Retained without modification | Historical evidence, not regenerated results or certification of the revised workflow. |
 

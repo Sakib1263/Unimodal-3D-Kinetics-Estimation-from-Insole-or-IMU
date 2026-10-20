@@ -10,7 +10,7 @@ The model modules are shared research implementations for 1D dense sequence reco
 | `LDNet` | `MLMRSNet.LDNet()` |
 | `UNet`, `UNetPP`, `UNet3P`, `MultiResUNet` | Corresponding methods of `unet_variants.UNet` |
 | `FPN` | `fpn.FPN.FPN()` |
-| `PSPNet` | Newly maintained baseline `pspnet.PSPNet.PSPNet()` |
+| `PSPNet` | `pspnet.PSPNet.PSPNet()` |
 
 The registry deliberately uses implementation names. **Do not equate `IMUNet` with Km2KnNet or Ke2KeNet without the component, equation, and checkpoint correspondence audit described in [PAPERS.md](../docs/PAPERS.md).** A passing shape/gradient test verifies software behavior, not article equivalence.
 
@@ -18,7 +18,7 @@ Deep-supervision targets are derived from actual output lengths, including full-
 
 [layers.py](layers.py) provides registered, serializable operational convolution/transposed-convolution, DropBlock1D, and channel-reduction layers. Operational layers validate polynomial order and create all trainable layers during initialization/build. DropBlock supports inference and training without removed Keras backend APIs, shares masks across channels correctly when requested, and handles a fully dropped mask without division by zero.
 
-Only registered architecture families and reusable layers remain in this directory. Unused exploratory modules, unsupported U-Net methods and standalone model demos were removed during cleanup. Historical checkpoints are not automatically compatible with consolidated layers or maintained model definitions.
+This directory contains the registered architecture families and reusable layers. Check historical checkpoints against the current model definitions before loading them.
 
 Construct models through `build_model(config, num_channels)`, rather than calling architecture methods directly. Configuration validation checks dimensions, the wrapper exposes a dictionary of named heads, and the runner applies losses and checkpoint selection consistently. The primary head uses a linear activation so signed force/moment predictions are preserved. The total validation loss drives checkpoint selection: primary weight 1 and auxiliary weight 0.5 each.
 
