@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from kinetics.config import ExperimentConfig
 
-NOTEBOOKS = {"Km2Kn.ipynb", "Insole2Kn3D_GRFM.ipynb", "Insole2Kn3D_CoP.ipynb"}
+NOTEBOOKS = {"Km2Kn.ipynb", "Insole2Kn_3DGRFMCoP.ipynb"}
 BAD_ENCODING = re.compile(r"\ufffd|[\u0080-\u009f]|[\u00c2\u00c3][\u00a0-\u00bf]|\u00e2[\u2000-\u21ff]")
 
 
@@ -55,7 +55,7 @@ def main():
     trees = {p: ast.parse(p.read_text(encoding="utf-8-sig"), filename=str(p)) for p in python_files}
     actual = {p.name for p in ROOT.glob("*.ipynb")}
     if actual != NOTEBOOKS:
-        raise ValueError(f"Expected only the three maintained notebooks; found {sorted(actual)}")
+        raise ValueError(f"Expected the maintained notebooks {sorted(NOTEBOOKS)}; found {sorted(actual)}")
     for filename in sorted(NOTEBOOKS):
         check_file_encoding(ROOT / filename)
         notebook = nbformat.read(ROOT / filename, as_version=4)
@@ -93,7 +93,7 @@ def main():
         *ROOT.joinpath("docs").glob("*.md"),
         *ROOT.joinpath("models").glob("*.md"),
         *ROOT.joinpath("configs").glob("*.md"),
-        *ROOT.joinpath("outputs").glob("*.md"),
+        *ROOT.joinpath("outputs").rglob("*.md"),
     ]
     for path in markdown:
         check_links(path.read_text(encoding="utf-8-sig"), path.parent, str(path.relative_to(ROOT)))

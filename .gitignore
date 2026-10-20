@@ -33,3 +33,4 @@ notebook_previews/
 .env.*
 !.env.example
 *.log
+~$*

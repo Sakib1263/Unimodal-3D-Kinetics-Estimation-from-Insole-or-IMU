@@ -28,9 +28,9 @@ The manuscript describes record-level min-max normalization before resampling/wi
 
 **Method:** Distributed plantar vGRF from smart insoles is mapped to instrumented-treadmill-reference 3D GRF, 3D GRM, and two horizontal CoP trajectories using target-specific 1D reconstruction models. The paper introduces Ke2KeNet and evaluates plantar-region relevance.
 
-**Notebooks:** [Insole2Kn3D_GRFM.ipynb](../Insole2Kn3D_GRFM.ipynb) for forces/moments and [Insole2Kn3D_CoP.ipynb](../Insole2Kn3D_CoP.ipynb) for CoP.
+**Notebook:** [Insole2Kn_3DGRFMCoP.ipynb](../Insole2Kn_3DGRFMCoP.ipynb) unifies forces, moments and CoP. Select one of eight targets and either foot in Section 2; all subsequent steps are shared.
 
-**Configurations:** [insole_grfm.json](../configs/insole_grfm.json) and [insole_cop.json](../configs/insole_cop.json).
+**Configuration:** [insole.json](../configs/insole.json), with left-foot `Fy` as the default. Each run retains its selected target, foot and input channels in the saved configuration.
 
 The article describes 1,024-sample windows at 256 Hz, segment min-max normalization, five outer participant folds, a random 10% validation subset of the training set, MAE validation loss, an initial learning rate of 3e-4, 20-epoch early-stopping patience, and a 10-epoch learning-rate patience. Historical code paths do not by themselves certify the reported dimensional errors or exact network implementation.
 
@@ -44,7 +44,7 @@ The article's original repository URL, [Insole-to-3DGRFMCoP](https://github.com/
 | Validation | One held-out participant from each outer training pool by default | Stricter than the articles' random 10% training-sample holdout; not numerically interchangeable. |
 | Preprocessing | Explicit source-scale contract; optional training-fitted min-max transform | Corrected protocol. Record/window normalization in each article must be reproduced separately when required. |
 | Overlap | Only within individual supplied records, after participant splitting | Pre-windowed exports cannot recover missing continuous samples for 80% overlap. |
-| CoP reference | Instrumented treadmill by default; missing CoP causes an error | Fixes historical notebooks that selected insole CoP while labeling the reference as force plate. |
+| Kinetic reference | Instrumented treadmill/force plates for forces, moments and CoP | The selected target must be present in the reference export and correctly labeled. |
 | Network identity | Explicit implemented class/method, e.g. `MLMRSNet.IMUNet` | Not automatically equated with Km2KnNet or Ke2KeNet. A component/equation/checkpoint audit remains necessary. |
 | PSPNet | Newly maintained 1D pyramid-pooling baseline | Replaces calls to a nonexistent `.PSPNet()` method; not a claim to recover an original trained benchmark. |
 | Dimensional errors | Inverse of a saved training transform, otherwise stored source scale | Body mass alone cannot recover discarded min-max parameters. |

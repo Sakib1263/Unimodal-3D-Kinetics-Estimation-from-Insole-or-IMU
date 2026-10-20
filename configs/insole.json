@@ -1,7 +1,7 @@
 {
   "study": "insole",
-  "target": "CoPz",
-  "side": "RL",
+  "target": "Fy",
+  "side": "LL",
   "data_format": "matlab",
   "data_files": [
     "data/Data_Preprocessed_Walk.mat",
@@ -41,7 +41,5 @@
   "loss": "mae",
   "output_dir": "runs",
   "feature_names": [],
-  "input_sides": [
-    "RL"
-  ]
+  "input_sides": []
 }

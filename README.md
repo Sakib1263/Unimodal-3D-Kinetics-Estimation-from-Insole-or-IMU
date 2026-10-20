@@ -9,7 +9,7 @@ Actively maintained research code for estimating per-foot plantar kinetics from 
 | Study | Article | Start with |
 | --- | --- | --- |
 | **Km2Kn** | *Deep learning-based reconstruction of a complete 3D plantar kinetic profile from optimized inertial kinematics*. **Manuscript under journal revision**, as of October 2026; a final citation/DOI will be added when available. | [Km2Kn.ipynb](Km2Kn.ipynb) - processed kinematic trajectories to forces, moments or CoP. |
-| **Insole2Kn3D** | Sakib Mahmud, Muhammad E. H. Chowdhury, and Faycal Bensaali. *3D Foot Kinetics Estimation From Distributed VGRF From Smart Insoles via 1D Domain Transformation*. **IEEE Journal of Biomedical and Health Informatics**, 30(3), 2656-2667, March 2026. [DOI: 10.1109/JBHI.2025.3605296](https://doi.org/10.1109/JBHI.2025.3605296). | [Insole2Kn3D_GRFM.ipynb](Insole2Kn3D_GRFM.ipynb) - forces/moments; [Insole2Kn3D_CoP.ipynb](Insole2Kn3D_CoP.ipynb) - center of pressure. |
+| **Insole2Kn3D** | Sakib Mahmud, Muhammad E. H. Chowdhury, and Faycal Bensaali. *3D Foot Kinetics Estimation From Distributed VGRF From Smart Insoles via 1D Domain Transformation*. **IEEE Journal of Biomedical and Health Informatics**, 30(3), 2656-2667, March 2026. [DOI: 10.1109/JBHI.2025.3605296](https://doi.org/10.1109/JBHI.2025.3605296). | [Insole2Kn_3DGRFMCoP.ipynb](Insole2Kn_3DGRFMCoP.ipynb) - one workflow for forces, moments and center of pressure; select the target and foot in Section 2. |
 
 The published article first appeared online on September 5, 2025. Its original repository address, [Insole-to-3DGRFMCoP](https://github.com/Sakib1263/Insole-to-3DGRFMCoP), resolves to this repository. Both articles are described in the [paper correspondence and citation guide](docs/PAPERS.md).
 
@@ -80,8 +80,7 @@ Choose a configuration:
 | Configuration | Default task |
 | --- | --- |
 | [configs/km2kn.json](configs/km2kn.json) | Bilateral ankle-region kinematics -> left-foot `Fy`. |
-| [configs/insole_grfm.json](configs/insole_grfm.json) | Left-foot pressure channels -> left-foot `Fy`. |
-| [configs/insole_cop.json](configs/insole_cop.json) | Right-foot pressure channels -> right-foot treadmill `CoPz`. |
+| [configs/insole.json](configs/insole.json) | Insole pressures -> one of eight force-plate targets; default left-foot `Fy`. |
 
 Copy the relevant JSON to a descriptive filename and adjust the target, foot, data paths and scale settings. Files under `configs/` resolve paths against the repository root. A JSON elsewhere resolves paths against its own folder; `project_dir` can explicitly set the base directory. Absolute paths are also accepted. The same base applies to `output_dir`.
 
@@ -89,17 +88,16 @@ Copy the relevant JSON to a descriptive filename and adjust the target, foot, da
 python -m kinetics inspect --config configs/km2kn.json
 ```
 
-Inspection checks inputs and prints participants, channel names, dimensions, reference source, units and planned fold sizes. It stops on missing files, missing targets, ambiguous metadata or nonfinite measurements. For treadmill CoP, missing CoP is an error; selecting insole CoP explicitly changes the task to a sensor-reference diagnostic.
+Inspection checks inputs and prints participants, channel names, dimensions, reference source, units and planned fold sizes. It stops on missing files, missing targets, ambiguous metadata or nonfinite measurements. All eight kinetic targets use the instrumented treadmill/force-plate reference; missing target channels stop loading.
 
 ## 4. Train and evaluate
 
 ```bash
 python -m kinetics train --config configs/km2kn.json
-python -m kinetics train --config configs/insole_grfm.json
-python -m kinetics train --config configs/insole_cop.json
+python -m kinetics train --config configs/insole.json
 ```
 
-Start a real-data trial with one `fold_ids` entry and `--epochs 1`. Then restore the intended folds and epoch limit for the full experiment. The three commands above are alternative study routes; run the one you intend to study.
+Start a real-data trial with one `fold_ids` entry and `--epochs 1`. Then restore the intended folds and epoch limit for the full experiment. Choose the command for your study. The unified insole notebook exposes target and foot selectors; command-line runs read those choices from the JSON.
 
 ```mermaid
 flowchart LR
@@ -155,8 +153,7 @@ For raw CSV stance plots, use `python -m kinetics raw-plot --help`. This separat
 
 ```text
 Km2Kn.ipynb                  Kinematic reconstruction workflow
-Insole2Kn3D_GRFM.ipynb        Insole force/moment workflow
-Insole2Kn3D_CoP.ipynb         Insole CoP workflow
+Insole2Kn_3DGRFMCoP.ipynb     Unified insole force, moment and CoP workflow
 kinetics/                    Shared loading, preprocessing, training, metrics and plotting
 models/                      Registered reconstruction architectures and reusable layers
 configs/                     Validated experiment settings
@@ -166,7 +163,7 @@ outputs/                     Preserved historical research exports
 scripts/                     Lightweight repository validation
 ```
 
-Historical CSV and spreadsheet results in [outputs/](outputs/README.md) are preserved research records. Verify their generating experiment before comparing them with a new run. Datasets, generated runs, checkpoints and environments are ignored by Git.
+Historical CSV and spreadsheet results in [outputs/](outputs/) are preserved research records. Verify their generating experiment before comparing them with a new run. Datasets, generated runs, checkpoints and environments are ignored by Git.
 
 For maintenance checks, install `python -m pip install -e ".[maintain]"`, then run `python -m ruff check .` and `python scripts/validate_repository.py`. GitHub Actions runs these static checks on published changes. The synthetic demo and notebook reload checks provide runnable integration checks; a separate research-data evaluation is required before scientific claims. See [CONTRIBUTING.md](CONTRIBUTING.md) for change-reporting guidance.
 

@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, replace
 from pathlib import Path
-import warnings
 import numpy as np
 
 IMU_CHANNELS = (
@@ -240,17 +239,9 @@ def load_matlab(path, config):
                 inputs.append(stream[:, :, :16])
                 names.extend(f"{side}_p{i}" for i in range(1, 17))
             x, names = np.concatenate(inputs, axis=2), tuple(names)
-        if config.target_source == "force_plate":
-            target = _mat_array(handle, f"data_Force_FP_{config.side}", dtype=None)
-            canonical = FP_CHANNELS[:6] if target.shape[2] == 6 else FP_CHANNELS
-            labels = _labels(handle, "label_FP", canonical, target.shape[2], config)
-        else:
-            warnings.warn(
-                "Insole CoP reference selected: this is a sensor-reference diagnostic, not treadmill CoP validation.",
-                stacklevel=2,
-            )
-            target = _mat_array(handle, f"data_Insole_{config.side}", dtype=None)
-            labels = _labels(handle, "label_Insole", INSOLE_CHANNELS, target.shape[2], config)
+        target = _mat_array(handle, f"data_Force_FP_{config.side}", dtype=None)
+        canonical = FP_CHANNELS[:6] if target.shape[2] == 6 else FP_CHANNELS
+        labels = _labels(handle, "label_FP", canonical, target.shape[2], config)
         if config.target not in labels:
             raise ValueError(
                 f"Target {config.target} absent from {config.target_source}; no substitute will be used."

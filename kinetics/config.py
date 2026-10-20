@@ -68,7 +68,7 @@ class ExperimentConfig:
             "data_format": ("matlab", "npz"),
             "dataset_state": ("source_native", "legacy_normalized"),
             "normalization": ("none", "train_minmax"),
-            "target_source": ("force_plate", "insole"),
+            "target_source": ("force_plate",),
             "model": (
                 "IMUNet",
                 "MLMRSNet",
@@ -158,8 +158,6 @@ class ExperimentConfig:
             and self.target_units != "normalized_source_scale_unknown"
         ):
             raise ValueError("Legacy window-normalized targets cannot be assigned physical units.")
-        if self.target_source == "insole" and self.target not in ("CoPx", "CoPz"):
-            raise ValueError("The insole reference is supported only for CoP diagnostics.")
 
     @property
     def root(self):

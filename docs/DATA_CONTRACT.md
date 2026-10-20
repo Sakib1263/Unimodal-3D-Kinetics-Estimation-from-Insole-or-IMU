@@ -25,7 +25,7 @@ Place the historical `Data_Preprocessed_Walk.mat` and `Data_Preprocessed_Run.mat
 
 Labels are decoded from MATLAB cell arrays. The historical-order fallback is available only through explicit `allow_legacy_channel_order: true`, with the expected channel count. It assumes the source order documented in `kinetics/data.py`; it is not a way to repair mismatched labels. If channel labels differ, review the source and implement an explicit, tested mapping. Do not rename channels by position without checking their meaning.
 
-For CoP, `target_source: force_plate` is the default. A six-channel force/moment reference cannot supply CoP. The loader raises an error instead of silently switching to the insole. `target_source: insole` supports an explicitly labeled CoP sensor-reference diagnostic only.
+All eight kinetic targets require `target_source: force_plate`. A six-channel force/moment export supports the six force/moment tasks; CoP experiments additionally require `CoPx` and/or `CoPz` in the labeled force-plate reference. Loading stops if the selected target is absent.
 
 The historical MATLAB script omitted `speedinfo` from its save call. A file without speed labels is incomplete for this workflow; regenerate it from the source rather than inventing labels.
 
